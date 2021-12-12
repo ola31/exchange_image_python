@@ -19,17 +19,19 @@ image_pub = rospy.Publisher("/output/image_raw/compressed", CompressedImage, que
 def image_listen():
     rospy.init_node('image_feature', anonymous=True)
    
-    subscriber = rospy.Subscriber("/camera/color/image_raw",Image, callback, queue_size = 1)
+    #subscriber = rospy.Subscriber("/camera/color/image_raw",Image, callback, queue_size = 1)
+    subscriber = rospy.Subscriber("/usb_cam_arm/image_raw",Image, callback, queue_size = 1)
 
     rospy.spin()
 
 def callback(data_):
 
-    frame = bridge.imgmsg_to_cv2(data_, "bgr8")
+    #frame = bridge.imgmsg_to_cv2(data_, "bgr8")
+    frame = bridge.imgmsg_to_cv2(data_, "mono8")
     encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
     
         
-    im = cv2.resize(frame, (320, 180))
+    im = cv2.resize(frame, (208, 117))
     msg = bridge.cv2_to_compressed_imgmsg(im)  
     image_pub.publish(msg)
 
